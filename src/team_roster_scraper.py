@@ -11,23 +11,6 @@ lcs_teams = {}
 lec_teams = {}
 lck_teams = {}
 
-# specific input params
-# 'https://lol.gamepedia.com/T1', 'T1', lck_teams(dictionary) 
-def scrape_team_roster(teamUrl, team, dict): 
-    page = requests.get(teamUrl)
-
-    soup = BeautifulSoup(page.content, 'html.parser')
-
-    # get CURRENT roster for teams 
-    current_roster = soup.find('table', {'class': 'team-members-current'})
-    player = current_roster.find_all('td', {'class': 'team-members-player'}) 
-    role = current_roster.find_all('td', {'class': 'team-members-role'})
-
-    for td1, td2 in zip(player, role): 
-        summoner_name = td1.text 
-        player_role = td2.text 
-        dict[team][summoner_name] = player_role
-
 # builds inital dictionary of teams 
 def make_team_dict(): 
     for team_name in lcs: 
@@ -53,6 +36,23 @@ def fill_dictionary():
         scrape_team_roster(url, team, lck_teams)
 
     # test('https://lol.gamepedia.com/T1', 'T1', lck_teams)
+
+# specific input params
+# 'https://lol.gamepedia.com/T1', 'T1', lck_teams(dictionary) 
+def scrape_team_roster(teamUrl, team, dict): 
+    page = requests.get(teamUrl)
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+
+    # get CURRENT roster for teams 
+    current_roster = soup.find('table', {'class': 'team-members-current'})
+    player = current_roster.find_all('td', {'class': 'team-members-player'}) 
+    role = current_roster.find_all('td', {'class': 'team-members-role'})
+
+    for td1, td2 in zip(player, role): 
+        summoner_name = td1.text 
+        player_role = td2.text 
+        dict[team][summoner_name] = player_role
 
 def export_csv(): 
     return 0
