@@ -1,5 +1,6 @@
 import requests
 import itertools
+import pandas as pd
 from bs4 import BeautifulSoup
 from pprint import pprint
 
@@ -55,7 +56,10 @@ def scrape_team_roster(teamUrl, team, dict):
         dict[team][summoner_name] = player_role
 
 def export_csv(): 
-    return 0
+    # headers = ['Team', 'Summoner Name', 'Position']
+    pd.DataFrame.from_dict(lcs_teams, orient='index').to_csv('test.csv')
+    # {'Canna': 'Top Laner', 'Zeus': 'Top Laner', 'Cuzz': 'Jungler', 'Ellim': 'Jungler', 'Oner': 'Jungler', 
+    #  'Clozer': 'Mid Laner', 'Faker': 'Mid Laner', 'Gumayusi': 'Bot Laner', 'Teddy': 'Bot Laner', 'Keria': 'Support'}
 
 def test(teamUrl, team, dict):
     page = requests.get(teamUrl)
@@ -79,6 +83,7 @@ def test(teamUrl, team, dict):
 if __name__ == "__main__":
     make_team_dict()
     fill_dictionary()
+    export_csv()
     # print(lcs_teams)
     # print(lec_teams)
     # print(lck_teams['T1']) 
