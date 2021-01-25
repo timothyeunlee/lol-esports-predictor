@@ -93,14 +93,3 @@ if __name__ == "__main__":
     make_team_dict()
     fill_dictionary()
     export_csv()
-
-
-# outname = 'name.csv'
-
-# outdir = './dir'
-# if not os.path.exists(outdir):
-#     os.mkdir(outdir)
-
-# fullname = os.path.join(outdir, outname)    
-
-# df.to_csv(fullname)
