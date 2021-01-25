@@ -1,3 +1,4 @@
+import os
 import requests
 import itertools
 import pandas as pd
@@ -50,16 +51,28 @@ def scrape_team_roster(teamUrl, team, dict):
     player = current_roster.find_all('td', {'class': 'team-members-player'}) 
     role = current_roster.find_all('td', {'class': 'team-members-role'})
 
-    for td1, td2 in zip(player, role): 
+    for td1, td2 in itertools.zip_longest(player, role): 
         summoner_name = td1.text 
         player_role = td2.text 
         dict[team][summoner_name] = player_role
 
 def export_csv(): 
-    # headers = ['Team', 'Summoner Name', 'Position']
-    pd.DataFrame.from_dict(lcs_teams, orient='index').to_csv('test.csv')
-    # {'Canna': 'Top Laner', 'Zeus': 'Top Laner', 'Cuzz': 'Jungler', 'Ellim': 'Jungler', 'Oner': 'Jungler', 
-    #  'Clozer': 'Mid Laner', 'Faker': 'Mid Laner', 'Gumayusi': 'Bot Laner', 'Teddy': 'Bot Laner', 'Keria': 'Support'}
+    lcs_output_file = 'lcs_player_roster.csv'
+    lec_output_file = 'lec_player_roster.csv' 
+    lck_output_file = 'lck_player_roster.csv' 
+
+    output_dir = './player_roster_csv' 
+    
+    if not os.path.exists(output_dir): 
+        os.mkdir(output_dir) 
+
+    lcs_fullpath = os.path.join(output_dir, lcs_output_file)
+    lec_fullpath = os.path.join(output_dir, lec_output_file)
+    lck_fullpath = os.path.join(output_dir, lck_output_file)
+
+    pd.DataFrame.from_dict(lcs_teams, orient='index').to_csv(lcs_fullpath)
+    pd.DataFrame.from_dict(lec_teams, orient='index').to_csv(lec_fullpath)
+    pd.DataFrame.from_dict(lck_teams, orient='index').to_csv(lck_fullpath)
 
 def test(teamUrl, team, dict):
     page = requests.get(teamUrl)
@@ -71,19 +84,23 @@ def test(teamUrl, team, dict):
     player = current_roster.find_all('td', {'class': 'team-members-player'}) 
     role = current_roster.find_all('td', {'class': 'team-members-role'})
 
-    # print ('player ', len(player)) 
-    # print ('role: ', len(role))
     for td1, td2 in itertools.zip_longest(player, role, fillvalue=''): 
         summoner_name = td1.text 
         player_role = td2.text 
-        # print(summoner_name)
-        # print(player_role)
         dict[team][summoner_name] = player_role
 
 if __name__ == "__main__":
     make_team_dict()
     fill_dictionary()
     export_csv()
-    # print(lcs_teams)
-    # print(lec_teams)
-    # print(lck_teams['T1']) 
+
+
+# outname = 'name.csv'
+
+# outdir = './dir'
+# if not os.path.exists(outdir):
+#     os.mkdir(outdir)
+
+# fullname = os.path.join(outdir, outname)    
+
+# df.to_csv(fullname)
