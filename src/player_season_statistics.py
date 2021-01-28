@@ -1,7 +1,8 @@
 import os 
 import requests
-from bs4 import BeautifulSoup
 import pprint
+import pandas as pd
+from bs4 import BeautifulSoup
 
 # SCRIPT PROCESS 
 # player_stats 
@@ -22,21 +23,24 @@ tournament_set = set()
 def player_stats(year):
     # need to import csv and get player data keys 
     sample_player_dict = {
-        # 'T1': {'Faker': 'Mid', 'Teddy': 'Bot', 'Canna': 'Jungler'}, 'DWG': {'Showmaker': 'Mid', 'Khan': 'Top'} 
-        'T1': {'Faker': 'Mid'}, 'DWG': {'ShowMaker': 'Mid'}
+        'T1': {'Faker': 'Mid', 'Teddy': 'Bot', 'Canna': 'Jungler'}, 'DWG': {'ShowMaker': 'Mid', 'Khan': 'Top'} 
+
+        # 'T1': {'Faker': 'Mid'}, 'DWG': {'ShowMaker': 'Mid'}
         # 'T1': {'Faker': 'Mid'}
     }
 
     player_dict = {} 
     for team in sample_player_dict.keys():
+        player_dict[team] = {}
         for player in sample_player_dict[team].keys():
-            player_dict[player] = {} 
-            scrape_player_stats_by_year(player, player_dict, year)
+            player_dict[team][player] = {} 
+            scrape_player_stats_by_year(team, player, player_dict, year)
 
+    export_csv(player_dict)
     # pprint.pprint(player_dict)
 
 
-def scrape_player_stats_by_year(player, player_dict, year):  
+def scrape_player_stats_by_year(team, player, player_dict, year):  
     player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
 
     # faker_url = 'https://lol.gamepedia.com/Faker/Statistics/2021' 
@@ -54,7 +58,7 @@ def scrape_player_stats_by_year(player, player_dict, year):
         
         tournament_set.add(tournament_name.text)
 
-        player_dict[player][tournament_name.text] = {}
+        player_dict[team][player][tournament_name.text] = {}
 
         count = 0
         
@@ -67,7 +71,7 @@ def scrape_player_stats_by_year(player, player_dict, year):
             
             if count == 16:
                 champion_dict = fill_player_champion_stats(stat_list)
-                player_dict[player][tournament_name.text].update(champion_dict)
+                player_dict[team][player][tournament_name.text].update(champion_dict)
 
                 stat_list.clear()
                 count = 0  
@@ -105,8 +109,17 @@ def check_index(index):
 
     return mapping.get(item)
 
+def export_csv(player_stats): 
+    lck_output_file = 'lck_player_stats.csv'
+
+    output_dir = './player_stats_csv'
+
+    if not os.path.exists(output_dir): 
+        os.mkdir(output_dir)
+    
+    lck_fullpath = os.path.join(output_dir, lck_output_file)
+
+    pd.DataFrame.from_dict(player_stats, orient='index').to_csv(lck_fullpath)
+
 if __name__ == "__main__":
-    player_stats('2021')
-    # print(tournament_set)
-    # scrape_player_stats_2021()
-    # test()
+    player_stats('2020')
