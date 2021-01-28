@@ -2,7 +2,21 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from pprint import pprint
- 
+
+# SCRIPT PROCESS 
+# player_stats 
+    # - iterate through player roster,
+    # - for each player in specific team, 
+    # - send each player to (scrape_player_stats_by_year)
+# scrape_player_stats_by_year
+#   - use beautiful soup to scrape webpage 
+#   - there are 16 stat for each champion player has played
+#   - for each 16 stats send to (fill_player_champion_stats) 
+# fill_player_champion_stats
+#     - (fill_player_champion_stats) will loop through each of the stats and populate a temporary dictionary 
+#             - and return it to scrape_player_stats_by_year
+#     - scrape_player_stats_by_year will then update the players dictionary 
+
 def player_stats(year):
     # need to import csv and get player data keys 
     sample_player_dict = {
