@@ -24,7 +24,6 @@ def player_stats(year):
     # need to import csv and get player data keys 
     sample_player_dict = {
         'T1': {'Faker': 'Mid', 'Teddy': 'Bot', 'Canna': 'Jungler'}, 'DWG': {'ShowMaker': 'Mid', 'Khan': 'Top'} 
-
         # 'T1': {'Faker': 'Mid'}, 'DWG': {'ShowMaker': 'Mid'}
         # 'T1': {'Faker': 'Mid'}
     }
@@ -59,16 +58,12 @@ def scrape_player_stats_by_year(team, player, player_dict, year):
         tournament_set.add(tournament_name.text)
 
         player_dict[team][player][tournament_name.text] = {}
-
         count = 0
-        
         stats = tag.find_all('td')
 
         for stat in stats:
             stat_list.append(stat.text) 
-            
             count += 1
-            
             if count == 16:
                 champion_dict = fill_player_champion_stats(stat_list)
                 player_dict[team][player][tournament_name.text].update(champion_dict)
