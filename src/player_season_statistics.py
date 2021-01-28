@@ -38,7 +38,6 @@ def player_stats(year):
     export_csv(player_dict)
     # pprint.pprint(player_dict)
 
-
 def scrape_player_stats_by_year(team, player, player_dict, year):  
     player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
 
@@ -71,7 +70,6 @@ def scrape_player_stats_by_year(team, player, player_dict, year):
                 stat_list.clear()
                 count = 0  
 
-
 def fill_player_champion_stats(stat_list):
     temp_dict = {}
     temp_dict[stat_list[0]] = {}
@@ -80,7 +78,6 @@ def fill_player_champion_stats(stat_list):
         temp_dict[stat_list[0]][check_index(count)] = stat
     
     return temp_dict
-
 
 def check_index(index): 
     item = index % 15
