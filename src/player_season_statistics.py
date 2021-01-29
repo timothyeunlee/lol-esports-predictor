@@ -1,49 +1,31 @@
 import os 
+from os import listdir
+from os.path import isfile, join
+
 import requests
 import pprint
 import pandas as pd
 from bs4 import BeautifulSoup
 
-# SCRIPT PROCESS 
-# player_stats 
-    # - iterate through player roster,
-    # - for each player in specific team, 
-    # - send each player to (scrape_player_stats_by_year)
-# scrape_player_stats_by_year
-#   - use beautiful soup to scrape webpage 
-#   - there are 16 stat for each champion player has played
-#   - for each 16 stats send to (fill_player_champion_stats) 
-# fill_player_champion_stats
-#     - (fill_player_champion_stats) will loop through each of the stats and populate a temporary dictionary 
-#             - and return it to scrape_player_stats_by_year
-#     - scrape_player_stats_by_year will then update the players dictionary 
-
 tournament_set = set()
+players_with_no_stats = [] 
 
-def player_stats(year):
-    # need to import csv and get player data keys 
-    sample_player_dict = {
-        'T1': {'Faker': 'Mid', 'Teddy': 'Bot', 'Canna': 'Jungler'}, 'DWG': {'ShowMaker': 'Mid', 'Khan': 'Top'} 
-        # 'T1': {'Faker': 'Mid'}, 'DWG': {'ShowMaker': 'Mid'}
-        # 'T1': {'Faker': 'Mid'}
-    }
+def player_stats(year, players, region):
+    player_dict = {}
+    player_dict[region] = {} 
 
-    player_dict = {} 
-    for team in sample_player_dict.keys():
-        player_dict[team] = {}
-        for player in sample_player_dict[team].keys():
-            player_dict[team][player] = {} 
-            scrape_player_stats_by_year(team, player, player_dict, year)
-
-    export_csv(player_dict)
+    for player in players:
+        player_dict[region][player] = {}
+        scrape_player_stats_by_year(player, player_dict, year, region)
+        export_csv(player_dict, region)
+        
+    # export_csv(player_dict)
     # pprint.pprint(player_dict)
 
-def scrape_player_stats_by_year(team, player, player_dict, year):  
+def scrape_player_stats_by_year(player, player_dict, year, region):  
     player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
 
-    # faker_url = 'https://lol.gamepedia.com/Faker/Statistics/2021' 
-
-    page = requests.get(player_url) 
+    page = requests.get(player_url)
 
     soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -53,23 +35,20 @@ def scrape_player_stats_by_year(team, player, player_dict, year):
     stat_list = []
     for tag in tournament_div: 
         tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
-        
         tournament_set.add(tournament_name.text)
-
-        player_dict[team][player][tournament_name.text] = {}
-        count = 0
+        player_dict[region][player][tournament_name.text] = {}
         stats = tag.find_all('td')
 
+        count = 0
         for stat in stats:
             stat_list.append(stat.text) 
             count += 1
             if count == 16:
                 champion_dict = fill_player_champion_stats(stat_list)
-                player_dict[team][player][tournament_name.text].update(champion_dict)
-
+                player_dict[region][player][tournament_name.text].update(champion_dict)
                 stat_list.clear()
                 count = 0  
-
+    
 def fill_player_champion_stats(stat_list):
     temp_dict = {}
     temp_dict[stat_list[0]] = {}
@@ -98,20 +77,33 @@ def check_index(index):
         13: 'Kill Share',
         14: 'Gold Share',
     }
-
     return mapping.get(item)
 
-def export_csv(player_stats): 
-    lck_output_file = 'lck_player_stats.csv'
+def read_roster_csv(year): 
+    roster_directory = './player_roster_csv'
+    csvs = os.listdir(roster_directory) 
 
+    for csv in csvs: 
+        region = extract_region_path(csv)
+        csv_path = roster_directory + '/' + csv
+        df = pd.read_csv(csv_path)
+        df = df.drop(df.columns[0], axis = 1)
+        players = df.columns.tolist()
+        player_stats(year, players, region)
+
+def export_csv(player_stats, region): 
+    output_file = region.lower() + '_player_stats.csv'
     output_dir = './player_stats_csv'
 
     if not os.path.exists(output_dir): 
         os.mkdir(output_dir)
-    
-    lck_fullpath = os.path.join(output_dir, lck_output_file)
 
-    pd.DataFrame.from_dict(player_stats, orient='index').to_csv(lck_fullpath)
+    fullpath = os.path.join(output_dir, output_file)
+    pd.DataFrame.from_dict(player_stats, orient='index').to_csv(fullpath)
+
+def extract_region_path(path):
+    modified_path = path[:3].upper()
+    return modified_path
 
 if __name__ == "__main__":
-    player_stats('2020')
+    read_roster_csv('2020') 
