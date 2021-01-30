@@ -29,25 +29,28 @@ def scrape_player_stats_by_year(player, player_dict, year, region):
 
     soup = BeautifulSoup(page.content, 'html.parser')
 
-    page_div = soup.find('div', {'class': 'mw-parser-output'})
-    tournament_div = page_div.find_all('div', {'class': 'wide-content-scroll'})
+    try: 
+        page_div = soup.find('div', {'class': 'mw-parser-output'})
+        tournament_div = page_div.find_all('div', {'class': 'wide-content-scroll'})
 
-    stat_list = []
-    for tag in tournament_div: 
-        tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
-        tournament_set.add(tournament_name.text)
-        player_dict[region][player][tournament_name.text] = {}
-        stats = tag.find_all('td')
+        stat_list = []
+        for tag in tournament_div: 
+            tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
+            tournament_set.add(tournament_name.text)
+            player_dict[region][player][tournament_name.text] = {}
+            stats = tag.find_all('td')
 
-        count = 0
-        for stat in stats:
-            stat_list.append(stat.text) 
-            count += 1
-            if count == 16:
-                champion_dict = fill_player_champion_stats(stat_list)
-                player_dict[region][player][tournament_name.text].update(champion_dict)
-                stat_list.clear()
-                count = 0  
+            count = 0
+            for stat in stats:
+                stat_list.append(stat.text) 
+                count += 1
+                if count == 16:
+                    champion_dict = fill_player_champion_stats(stat_list)
+                    player_dict[region][player][tournament_name.text].update(champion_dict)
+                    stat_list.clear()
+                    count = 0  
+    except AttributeError:
+        pass
     
 def fill_player_champion_stats(stat_list):
     temp_dict = {}
