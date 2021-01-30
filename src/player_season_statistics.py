@@ -12,17 +12,16 @@ players_with_no_stats = []
 
 def player_stats(year, players, region):
     player_dict = {}
-    player_dict[region] = {} 
 
     for player in players:
-        player_dict[region][player] = {}
-        scrape_player_stats_by_year(player, player_dict, year, region)
+        player_dict[player] = {}
+        scrape_player_stats_by_year(player, player_dict, year)
         export_csv(player_dict, region)
         
     # export_csv(player_dict)
     # pprint.pprint(player_dict)
 
-def scrape_player_stats_by_year(player, player_dict, year, region):  
+def scrape_player_stats_by_year(player, player_dict, year):  
     player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
 
     page = requests.get(player_url)
@@ -37,7 +36,7 @@ def scrape_player_stats_by_year(player, player_dict, year, region):
         for tag in tournament_div: 
             tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
             tournament_set.add(tournament_name.text)
-            player_dict[region][player][tournament_name.text] = {}
+            player_dict[player][tournament_name.text] = {}
             stats = tag.find_all('td')
 
             count = 0
@@ -46,7 +45,7 @@ def scrape_player_stats_by_year(player, player_dict, year, region):
                 count += 1
                 if count == 16:
                     champion_dict = fill_player_champion_stats(stat_list)
-                    player_dict[region][player][tournament_name.text].update(champion_dict)
+                    player_dict[player][tournament_name.text].update(champion_dict)
                     stat_list.clear()
                     count = 0  
     except AttributeError:
