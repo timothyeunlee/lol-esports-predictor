@@ -62,6 +62,38 @@ def scrape_player_stats_by_year(player, player_dict, year):
         for stat in stats: 
             print (stat.text)
 
+def test_scrape(player, player_dict, year):  
+    player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
+    # zeus_url = 'https://lol.gamepedia.com/Zeus/Statistics/2020'
+    faker_url = 'https://lol.gamepedia.com/Faker/Statistics/2021' 
+    # print(player_url)    
+
+    page = requests.get(player_url) 
+
+    soup = BeautifulSoup(page.content, 'html.parser')
+    # stats_div = soup.find('div', {'class': 'wide-content-scroll'})
+
+    # page_div = soup.find('div', {'class': 'mw-parser-output'})
+    # if page_div.text is :
+        # print('div exists ')
+    # else:
+        # print('not exists')
+
+    try: 
+        page_div = soup.find('div', {'class': 'mw-parser-output'})
+        tournament_div = page_div.find_all('div', {'class': 'wide-content-scroll'})
+        for tag in tournament_div: 
+            tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
+            # print(tournament_name.text)
+        
+            stats = tag.find_all('td')
+            for stat in stats: 
+                print (stat.text)
+    except AttributeError:
+        print ('att error')
+
+   
+
     # print(stats)
 
     # stat_list = []
@@ -82,17 +114,64 @@ def scrape_player_stats_by_year(player, player_dict, year):
 #     for innerkey in team: 
 #         print(innerkey)
 
-
+# sample_player_dict = {
+#         # 'T1': {'Faker': 'Mid', 'Teddy': 'Bot', 'Canna': 'Jungler'}, 'DWG': {'ShowMaker': 'Mid', 'Khan': 'Top'} 
+#         # 'T1': {'Faker': 'Mid'}, 'DWG': {'ShowMaker': 'Mid'}
+#         'T1': {'Faker': 'Mid'}
+#     }
 # {'faker': {'Champion': 'Zoe', 'Games': '2', 'Win': '1', 'Loss': '1', 'W/L Ratio': '50%', 
 # 'Kill': '1.5', 'Death': '1.5', 'Assist': '5.5', 'KDA': '4.67', 'CS': '276.5', 'CS/M': '7.75', 
 # 'Gold': '12.3', 'Gold/M': '345', 'Kill Participation': '58.3%', 'Kill Share': '12.5%', 'Gold Share': '19.6%'}}
+    
+    
+    # IF I WANT TEAM IN CSV USE THIS 
+    # player_dict = {} 
+    # for team in sample_player_dict.keys():
+    #     player_dict[team] = {}
+    #     for player in sample_player_dict[team].keys():
+    #         player_dict[team][player] = {} 
+    #         scrape_player_stats_by_year(team, player, player_dict, year)
+
+def test_output_list(year): 
+    # values = ['1', '2', '3']
+    directory = '../'
+    values = ['Fake', 'r', 'showmaker']
+    file_name = 'no_player_stats' + year + '.txt'
+    complete_path = os.path.join(directory, file_name)
+    # if not os.path.exists(file_name): 
+        # os.mkdir(file_name)
+    file1 = open(complete_path, "w")
+    print(file_name)
+    file1.write(str(values))
+    # with open(file_name, 'w') as output: 
+        # output.write(str(values))
+
+
+#         completeName = os.path.join(save_path, file_name)
+# print(completeName)
+# OUTPUT
+# /home/test.txt
+
+# file1 = open(completeName, "w")
+# with open("file.txt", "w") as output:
+    # output.write(str(values))
 
 if __name__ == "__main__":
     # gettingPlayerName()
     sample_dict = {}
     sample_dict['Faker'] = {}
-    scrape_player_stats_by_year('Faker', sample_dict, '2020')
+    # sample_dict['Zeus'] = {}
+    # test_output_list('2020')
+    year = '2020'
+    output_dir = './player_stats_csv/'
+    year_dir = output_dir + '/' + year
+    print(output_dir)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    if not os.path.exists(year_dir):
+        os.mkdir(year_dir)
+    # scrape_player_stats_by_year('Faker', sample_dict, '2020')
     # testForReplacing()
-
-
-    
+    # test_scrape('Faker', sample_dict, '2021') 
+    # output_dir = './player_stats_csv/' + '2021'
+    # print(output_dir)
