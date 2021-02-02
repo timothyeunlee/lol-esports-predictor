@@ -7,19 +7,15 @@ import pprint
 import pandas as pd
 from bs4 import BeautifulSoup
 
-tournament_set = set()
 players_with_no_stats = [] 
 
 def player_stats(year, players, region):
     player_dict = {}
 
     for player in players:
-        player_dict[player] = {}
         scrape_player_stats_by_year(player, player_dict, year)
-        export_csv(player_dict, region)
+        export_helper(player_dict, region, player, year)
         
-    # export_csv(player_dict)
-    # pprint.pprint(player_dict)
 
 def scrape_player_stats_by_year(player, player_dict, year):  
     player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
@@ -35,8 +31,7 @@ def scrape_player_stats_by_year(player, player_dict, year):
         stat_list = []
         for tag in tournament_div: 
             tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
-            tournament_set.add(tournament_name.text)
-            player_dict[player][tournament_name.text] = {}
+            player_dict[tournament_name.text] = {}
             stats = tag.find_all('td')
 
             count = 0
@@ -45,10 +40,12 @@ def scrape_player_stats_by_year(player, player_dict, year):
                 count += 1
                 if count == 16:
                     champion_dict = fill_player_champion_stats(stat_list)
-                    player_dict[player][tournament_name.text].update(champion_dict)
+                    player_dict[tournament_name.text].update(champion_dict)
                     stat_list.clear()
-                    count = 0  
+                    count = 0
+
     except AttributeError:
+        players_with_no_stats.append(player)
         pass
     
 def fill_player_champion_stats(stat_list):
@@ -73,7 +70,7 @@ def check_index(index):
         7: 'KDA',
         8: 'CS',
         9: 'CS/M',
-        10: 'Gold',
+        10: 'Gold(k)',
         11: 'Gold/M',
         12: 'Kill Participation',
         13: 'Kill Share',
@@ -93,19 +90,48 @@ def read_roster_csv(year):
         players = df.columns.tolist()
         player_stats(year, players, region)
 
-def export_csv(player_stats, region): 
-    output_file = region.lower() + '_player_stats.csv'
-    output_dir = './player_stats_csv'
+def export_csv(player_dict, tournament_name, region, player, year): 
+    output_dir = './player_stats_csv/'
+    year_dir   = output_dir + '/' + year
+    region_dir = year_dir + '/' + region.lower()
+    player_dir = region_dir + '/' + player
+
+    formated_name = replace_tournament_name(tournament_name)
+    output_file = formated_name + '.csv'
 
     if not os.path.exists(output_dir): 
         os.mkdir(output_dir)
+    if not os.path.exists(year_dir): 
+        os.mkdir(year_dir)
+    if not os.path.exists(region_dir):
+        os.mkdir(region_dir)
+    if not os.path.exists(player_dir): 
+        os.mkdir(player_dir)
 
-    fullpath = os.path.join(output_dir, output_file)
-    pd.DataFrame.from_dict(player_stats, orient='index').to_csv(fullpath)
+    fullpath = os.path.join(player_dir, output_file)
+    pd.DataFrame.from_dict(player_dict, orient='index').to_csv(fullpath)
+
+def export_helper(player_dict, region, player, year):
+    temp_dict = player_dict
+    for key in temp_dict.keys(): 
+        export_csv(temp_dict[key], key, region, player, year)
+
+def replace_tournament_name(tournament_name): 
+    formated_name = tournament_name.replace(' ', '_').lower()
+    return formated_name
 
 def extract_region_path(path):
     modified_path = path[:3].upper()
     return modified_path
 
+def players_no_stats_by_year(year): 
+    directory_path = './player_stats_csv/' + year
+    file_name = 'players_with_no_stats_' + year + '.txt'
+    complete_path = os.path.join(directory_path, file_name)
+    player_with_no_stats_file = open(complete_path, 'w')
+    player_with_no_stats_file.write(str(players_with_no_stats))    
+
 if __name__ == "__main__":
-    read_roster_csv('2020') 
+    year = '2020'
+    read_roster_csv(year) 
+    players_no_stats_by_year(year)
