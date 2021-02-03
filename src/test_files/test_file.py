@@ -71,13 +71,6 @@ def test_scrape(player, player_dict, year):
     page = requests.get(player_url) 
 
     soup = BeautifulSoup(page.content, 'html.parser')
-    # stats_div = soup.find('div', {'class': 'wide-content-scroll'})
-
-    # page_div = soup.find('div', {'class': 'mw-parser-output'})
-    # if page_div.text is :
-        # print('div exists ')
-    # else:
-        # print('not exists')
 
     try: 
         page_div = soup.find('div', {'class': 'mw-parser-output'})
@@ -92,46 +85,6 @@ def test_scrape(player, player_dict, year):
     except AttributeError:
         print ('att error')
 
-   
-
-    # print(stats)
-
-    # stat_list = []
-
-    # count = 0
-    # for td in stats:
-        # stat_list.append(td.text)
-        # count += 1
-        # if count == 16: 
-            # champion_dict = fill_player_champion_stats(stat_list)
-            # print(stat_list)            
-            # player_dict[player].update(champion_dict)
-            # stat_list.clear()
-            # count = 0
-   
-######################################################################################################################################################################################
-# for team in sample_dictionary: 
-#     for innerkey in team: 
-#         print(innerkey)
-
-# sample_player_dict = {
-#         # 'T1': {'Faker': 'Mid', 'Teddy': 'Bot', 'Canna': 'Jungler'}, 'DWG': {'ShowMaker': 'Mid', 'Khan': 'Top'} 
-#         # 'T1': {'Faker': 'Mid'}, 'DWG': {'ShowMaker': 'Mid'}
-#         'T1': {'Faker': 'Mid'}
-#     }
-# {'faker': {'Champion': 'Zoe', 'Games': '2', 'Win': '1', 'Loss': '1', 'W/L Ratio': '50%', 
-# 'Kill': '1.5', 'Death': '1.5', 'Assist': '5.5', 'KDA': '4.67', 'CS': '276.5', 'CS/M': '7.75', 
-# 'Gold': '12.3', 'Gold/M': '345', 'Kill Participation': '58.3%', 'Kill Share': '12.5%', 'Gold Share': '19.6%'}}
-    
-    
-    # IF I WANT TEAM IN CSV USE THIS 
-    # player_dict = {} 
-    # for team in sample_player_dict.keys():
-    #     player_dict[team] = {}
-    #     for player in sample_player_dict[team].keys():
-    #         player_dict[team][player] = {} 
-    #         scrape_player_stats_by_year(team, player, player_dict, year)
-
 def test_output_list(year): 
     # values = ['1', '2', '3']
     directory = '../'
@@ -143,18 +96,6 @@ def test_output_list(year):
     file1 = open(complete_path, "w")
     print(file_name)
     file1.write(str(values))
-    # with open(file_name, 'w') as output: 
-        # output.write(str(values))
-
-
-#         completeName = os.path.join(save_path, file_name)
-# print(completeName)
-# OUTPUT
-# /home/test.txt
-
-# file1 = open(completeName, "w")
-# with open("file.txt", "w") as output:
-    # output.write(str(values))
 
 if __name__ == "__main__":
     # gettingPlayerName()
