@@ -89,7 +89,10 @@ def test(teamUrl, team, dict):
         player_role = td2.text 
         dict[team][summoner_name] = player_role
 
-if __name__ == "__main__":
+def main(): 
     make_team_dict()
     fill_dictionary()
     export_csv()
+
+if __name__ == "__main__":
+    main()
