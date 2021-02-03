@@ -84,7 +84,7 @@ def read_roster_csv(year):
         player_stats(year, players, region)
 
 def export_csv(player_dict, tournament_name, region, player, year): 
-    output_dir = './player_stats_csv/'
+    output_dir = './player_stats_csv'
     year_dir   = output_dir + '/' + year
     region_dir = year_dir + '/' + region.lower()
     player_dir = region_dir + '/' + player
@@ -111,6 +111,7 @@ def export_helper(player_dict, region, player, year):
 
 def replace_tournament_name(tournament_name): 
     formated_name = tournament_name.replace(' ', '_').lower()
+    formated_name = tournament_name.replace('/', '_').lower()
     return formated_name
 
 def extract_region_path(path):
@@ -132,7 +133,8 @@ def test():
     players_no_stats_by_year('2020')
 
 def main(): 
-    year = '2021'
+    # 2021 
+    year = '2019'
     read_roster_csv(year) 
     players_no_stats_by_year(year)
 
