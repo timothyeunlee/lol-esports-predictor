@@ -1,29 +1,25 @@
 import os 
 from os import listdir
 from os.path import isfile, join
-
 import requests
-import pprint
 import pandas as pd
 from bs4 import BeautifulSoup
 
 players_with_no_stats = [] 
 
 def player_stats(year, players, region):
-    player_dict = {}
-
     for player in players:
+        player_dict = {}
         scrape_player_stats_by_year(player, player_dict, year)
         export_helper(player_dict, region, player, year)
         
-
 def scrape_player_stats_by_year(player, player_dict, year):  
     player_url = 'https://lol.gamepedia.com/' + player + '/Statistics/' + year
 
     page = requests.get(player_url)
 
     soup = BeautifulSoup(page.content, 'html.parser')
-
+    
     try: 
         page_div = soup.find('div', {'class': 'mw-parser-output'})
         tournament_div = page_div.find_all('div', {'class': 'wide-content-scroll'})
@@ -33,7 +29,6 @@ def scrape_player_stats_by_year(player, player_dict, year):
             tournament_name = tag.find('a', {'class': 'mw-redirect to_hasTooltip'})
             player_dict[tournament_name.text] = {}
             stats = tag.find_all('td')
-
             count = 0
             for stat in stats:
                 stat_list.append(stat.text) 
@@ -43,10 +38,8 @@ def scrape_player_stats_by_year(player, player_dict, year):
                     player_dict[tournament_name.text].update(champion_dict)
                     stat_list.clear()
                     count = 0
-
     except AttributeError:
         players_with_no_stats.append(player)
-        pass
     
 def fill_player_champion_stats(stat_list):
     temp_dict = {}
@@ -128,10 +121,21 @@ def players_no_stats_by_year(year):
     directory_path = './player_stats_csv/' + year
     file_name = 'players_with_no_stats_' + year + '.txt'
     complete_path = os.path.join(directory_path, file_name)
-    player_with_no_stats_file = open(complete_path, 'w')
-    player_with_no_stats_file.write(str(players_with_no_stats))    
+    abs_path = os.path.abspath(complete_path)
+    with open(abs_path, 'a+') as player_file:
+        player_file.write(str(players_with_no_stats))
 
-if __name__ == "__main__":
+def test():
+    players = ['Canna', 'Zeus', 'Cuzz', 'Ellim', 'Oner', 'Clozer', 'Faker', 'Gumayusi', 'Teddy', 'Keria', 'Burdol', 'Rascal', 'Clid', 'Flawless', 'Bdd', 'Karis', 'Ruler', 'Life', 'Doran', 'Blank', 'Bonnie', 'Dove', 'Ucal', 'HyBriD', 'Zzus', 'Kiin', 'Dread', 'Fly', 'Keine', 'Bang', 'Lehends', 'Rich', 'Juhan', 'Peanut', 'Bay', 'deokdam', 'Wayne', 'Kellin', 'Summit', 'Croco', 'OnFleek', 'FATE', 'Leo', 'Route', 'Effort', 'DuDu', 'Morgan', 'Arthur', 'yoHan', 'Chovy', 'Deft', 'Vsta', 'Hoya', 'Chieftain', 'UmTi', 'Lava', 'Hena', 'Delight', 'Chasy', 'Khan', 'Canyon', 'ShowMaker', 'Ghost', 'BeryL', 'Destroy', 'Kingen', 'Pyosik', 'SOLKA', 'BAO', 'Becca']
     year = '2020'
+    player_stats(year, players, 'lck') 
+    players_no_stats_by_year('2020')
+
+def main(): 
+    year = '2021'
     read_roster_csv(year) 
     players_no_stats_by_year(year)
+
+if __name__ == "__main__":
+    main()
+    # test()
