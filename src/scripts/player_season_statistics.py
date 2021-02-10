@@ -72,7 +72,7 @@ def check_index(index):
     return mapping.get(item)
 
 def read_roster_csv(year): 
-    roster_directory = './player_roster_csv'
+    roster_directory = '../data/player_roster_csv'
     csvs = os.listdir(roster_directory) 
 
     for csv in csvs: 
@@ -84,7 +84,7 @@ def read_roster_csv(year):
         player_stats(year, players, region)
 
 def export_csv(player_dict, tournament_name, region, player, year): 
-    output_dir = './player_stats_csv'
+    output_dir = '../data/player_stats_csv'
     year_dir   = output_dir + '/' + year
     region_dir = year_dir + '/' + region.lower()
     player_dir = region_dir + '/' + player
@@ -119,7 +119,7 @@ def extract_region_path(path):
     return modified_path
 
 def players_no_stats_by_year(year): 
-    directory_path = './data/player_stats_csv/' + year
+    directory_path = '../data/player_stats_csv/' + year
     file_name = 'players_with_no_stats_' + year + '.txt'
     complete_path = os.path.join(directory_path, file_name)
     abs_path = os.path.abspath(complete_path)
@@ -139,5 +139,5 @@ def main():
     players_no_stats_by_year(year)
 
 if __name__ == "__main__":
-    main()
-    # test()
+    # main()
+    test()
