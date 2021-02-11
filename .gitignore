@@ -135,4 +135,4 @@ test_files/*
 .DS_Store
 
 # raw data from oracle elixir 
-/data/raw_data
+data/raw_data
