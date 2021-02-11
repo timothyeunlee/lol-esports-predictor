@@ -10,8 +10,8 @@ def get_team_stats():
 
     # TO RUN SCRIPT DOWNLOAD ALL MATCH DATA FILES FROM 
     # https://oracleselixir.com/tools/downloads
-    # SAVE IN A DIR 'match_data_csv/'
-    match_data_path = './match_data_csv' 
+    # SAVE IN A DIR '../data/raw_data'
+    match_data_path = '../data/raw_data/' 
     csvs = os.listdir(match_data_path) 
     for csv in csvs:
         year = extract_year(csv)
@@ -20,7 +20,7 @@ def get_team_stats():
         get_team_stats_helper(csv, lck, 'lck', year)
 
 def get_team_stats_helper(csv, team_list, region, year): 
-    csv_path = './match_data_csv/' + csv
+    csv_path = '../data/raw_data/' + csv
     df = pd.read_csv(csv_path) 
     teams_filter = df['position'] == 'team' 
     teams_df = df[teams_filter]
@@ -31,7 +31,8 @@ def get_team_stats_helper(csv, team_list, region, year):
         export_df (team_df, team, region, year)
 
 def export_df(team_df, team, region, year):
-    output_dir = '../data/team_stats_csv'
+    # output_dir = '../data/team_stats_csv'
+    output_dir = '../data/updated_team_stats_csv'
     year_dir = output_dir + '/' + year
     region_dir = year_dir + '/' + region 
     formatted_team = format_team(team)
@@ -54,8 +55,21 @@ def format_team(team_name):
 def extract_year(csv_file):
     return csv_file[:4]
 
+# def test(): 
+#     lck = ['T1', 'Gen.G', 'KT Rolster', 'Afreeca Freecs', 'Nongshim RedForce', 'Liiv SANDBOX', 'Hanwha Life Esports', 'Fredit BRION', 'DWG KIA', 'DRX']
+#     match_data_path = '../data/raw_data/2021_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
+#     df = pd.read_csv(match_data_path)
+#     teams_filter = df['position'] == 'team'
+#     teams_df = df[teams_filter] 
+#     for team in lck: 
+#         get_team = teams_df['team'] == team 
+#         team_df = teams_df[get_team]
+#         export_df (team_df, team, 'lck', '2021')
+
+
 def main(): 
     get_team_stats()
+    # test() 
 
 if __name__ == "__main__": 
     main() 
