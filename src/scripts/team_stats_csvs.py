@@ -2,7 +2,55 @@ import pandas as pd
 import os
 
 # SCRIPT to extract team match data from oracleexlir csvs 
+# Patch after elemental dragons (2020 - CURRENT)
+#  
+def all_teams_stats(): 
+    all_teams = [
+        '100 Thieves', 
+        'Cloud9',
+        'Counter Logic Gaming',
+        'Dignitas', 
+        'Evil Geniuses', 
+        'FlyQuest',
+        'Golden Guardians', 
+        'Immortals',
+        'Team Liquid',
+        'TSM', 
+        'Excel Esports',
+        'FC Schalke 04 Esports',
+        'Fnatic', 
+        'G2 Esports', 
+        'MAD Lions',
+        'Misfits Gaming', 
+        'Rogue',
+        'Origen', # 2020
+        'SK Gaming',
+        'Team Vitality',
+        'Astralis', 
+        'T1', 
+        'Gen.G', 
+        'KT Rolster', 
+        'Afreeca Freecs', 
+        'Nongshim RedForce', 
+        'Liiv SANDBOX', 
+        'Hanwha Life Esports', 
+        'Fredit BRION', 
+        'DWG KIA', 
+        'DRX',
+        'DAMWON Gaming', # 2020
+        'SANDBOX Gaming', #2020
+        'Griffin', #2020
+        'SeolHaeOne Prince', #2020
+    ]
+    # file_path = '../data/raw_data/2020_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
+    file_path = '../data/raw_data/2021_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
+    df = pd.read_csv(file_path) 
+    filter_teams = df['position'] == 'team'
+    teams_df = df[filter_teams]
+    new_df = teams_df[teams_df['team'].isin(all_teams)]
+    print(new_df)
 
+# main method to get teams from current rosters (2021) 
 def get_team_stats(): 
     lcs = ['100 Thieves', 'TSM', 'Team Liquid', 'Counter Logic Gaming', 'Golden Guardians', 'Evil Geniuses', 'Cloud9', 'Immortals', 'FlyQuest', 'Dignitas']
     lec = ['SK Gaming', 'Astralis', 'Excel Esports', 'FC Schalke 04 Esports', 'Fnatic', 'G2 Esports', 'MAD Lions', 'Misfits Gaming', 'Rogue', 'Team Vitality'] 
@@ -32,7 +80,7 @@ def get_team_stats_helper(csv, team_list, region, year):
 
 def export_df(team_df, team, region, year):
     # output_dir = '../data/team_stats_csv'
-    output_dir = '../data/updated_team_stats_csv'
+    output_dir = '../data/2020_2021_team_stats_csv'
     year_dir = output_dir + '/' + year
     region_dir = year_dir + '/' + region 
     formatted_team = format_team(team)
@@ -68,7 +116,8 @@ def extract_year(csv_file):
 
 
 def main(): 
-    get_team_stats()
+    all_teams_stats()
+    # get_team_stats()
     # test() 
 
 if __name__ == "__main__": 
