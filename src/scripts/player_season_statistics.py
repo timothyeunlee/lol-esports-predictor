@@ -5,6 +5,12 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
+"""
+    Script to web scrape player data  
+    from 'https://lol.gamepedia.com/'
+"""
+
+
 players_with_no_stats = [] 
 
 def player_stats(year, players, region):
