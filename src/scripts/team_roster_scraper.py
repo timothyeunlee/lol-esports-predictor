@@ -5,6 +5,12 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from pprint import pprint
 
+"""
+    Script to web team rosters using beautiful soup 
+    from 'https://lol.gamepedia.com/'
+"""
+
+
 lcs = ['100_Thieves', 'TSM', 'Team_Liquid', 'Counter_Logic_Gaming', 'Golden_Guardians', 'Evil_Geniuses', 'Cloud9', 'Immortals', 'FlyQuest', 'Dignitas']
 lec = ['SK_Gaming', 'Astralis', 'Excel_Esports', 'FC_Schalke_04_Esports', 'Fnatic', 'G2_Esports', 'MAD_Lions', 'Misfits_Gaming', 'Rogue_(European_Team)', 'Team_Vitality'] 
 lck = ['T1', 'Gen.G', 'KT_Rolster', 'Afreeca_Freecs', 'Nongshim_RedForce', 'Liiv_SANDBOX', 'Hanwha_Life_Esports', 'Fredit_BRION', 'DWG_KIA', 'DRX']
