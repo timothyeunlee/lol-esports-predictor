@@ -1,9 +1,11 @@
 import pandas as pd 
 import os
 
-# SCRIPT to extract team match data from oracleexlir csvs 
-# Patch after elemental dragons (2020 - CURRENT)
-#  
+"""
+SCRIPT to extract team match data from oracleexlir csvs 
+Patch after elemental dragons (2020 - CURRENT)
+"""
+
 def all_teams_stats(): 
     all_teams = [
         '100 Thieves', 
@@ -42,15 +44,34 @@ def all_teams_stats():
         'Griffin', #2020
         'SeolHaeOne Prince', #2020
     ]
-    # file_path = '../data/raw_data/2020_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
-    file_path = '../data/raw_data/2021_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
-    df = pd.read_csv(file_path) 
+    raw_data_2020 = '../data/raw_data/2020_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
+    raw_data_2021 = '../data/raw_data/2021_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
+
+    filtered_data_2020 = filter_df(raw_data_2020, all_teams) 
+    filtered_data_2021 = filter_df(raw_data_2021, all_teams) 
+
+    export(filtered_data_2020, '2020')
+    export(filtered_data_2021, '2021')
+
+def filter_df(csv, teams):
+    df = pd.read_csv(csv) 
     filter_teams = df['position'] == 'team'
     teams_df = df[filter_teams]
-    new_df = teams_df[teams_df['team'].isin(all_teams)]
-    print(new_df)
+    new_df = teams_df[teams_df['team'].isin(teams)]
+    return new_df
 
-# main method to get teams from current rosters (2021) 
+def export(df, year):
+    output_dir = '../data/2020_2021_team_stats_csv'
+    output_file = year + '_team_stats.csv'
+    if not os.path.exists(output_dir): 
+        os.mkdir(output_dir) 
+    complete_path = os.path.join(output_dir, output_file) 
+    # print(complete_path)
+    df.to_csv(complete_path)
+
+"""
+Methods below are used to filter teams from raw data using a different format 
+"""
 def get_team_stats(): 
     lcs = ['100 Thieves', 'TSM', 'Team Liquid', 'Counter Logic Gaming', 'Golden Guardians', 'Evil Geniuses', 'Cloud9', 'Immortals', 'FlyQuest', 'Dignitas']
     lec = ['SK Gaming', 'Astralis', 'Excel Esports', 'FC Schalke 04 Esports', 'Fnatic', 'G2 Esports', 'MAD Lions', 'Misfits Gaming', 'Rogue', 'Team Vitality'] 
