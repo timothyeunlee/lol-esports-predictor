@@ -136,3 +136,6 @@ test_files/*
 
 # raw data from oracle elixir 
 src/data/raw_data/*
+
+# vscode
+.vscode
