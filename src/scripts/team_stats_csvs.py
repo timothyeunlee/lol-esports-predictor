@@ -8,6 +8,7 @@ Patch after elemental dragons (2020 - CURRENT)
 
 def all_teams_stats(): 
     all_teams = [
+        # LCS
         '100 Thieves', 
         'Cloud9',
         'Counter Logic Gaming',
@@ -17,7 +18,8 @@ def all_teams_stats():
         'Golden Guardians', 
         'Immortals',
         'Team Liquid',
-        'TSM', 
+        'TSM',
+        # LEC 
         'Excel Esports',
         'FC Schalke 04 Esports',
         'Fnatic', 
@@ -29,6 +31,7 @@ def all_teams_stats():
         'SK Gaming',
         'Team Vitality',
         'Astralis', 
+        # LCK
         'T1', 
         'Gen.G', 
         'KT Rolster', 
@@ -43,6 +46,41 @@ def all_teams_stats():
         'SANDBOX Gaming', #2020
         'Griffin', #2020
         'SeolHaeOne Prince', #2020
+        # LPL 
+        'Billibili Gaming',
+        'Dominus Esports', # 2020
+        'EDward Gaming', 
+        'FunPlus Phoenix', 
+        'Invictus Gaming',
+        'JD Gaming',
+        'LGD Gaming',
+        'LNG Esports',
+        'Oh My God',
+        'Rogue Warriors',
+        'Royal Never Give Up', 
+        'Suning',
+        'Team WE',
+        'Top Esports',
+        'Vici Gaming', # 2020 
+        'Victory Five',
+        'eStar',
+        'Rare Atom', # 2021
+        'ThunderTalk Gaming', # 2021
+        # PCS 
+        'ahq eSports Club',
+        'Alpha Esports',
+        'Berjaya Dragons',
+        'Hong Kong Attitude',
+        'J Team',
+        'Liyab Esports',
+        'Machi Esports',
+        'Nova Esports',
+        'Resurgence',
+        'Talon Esports',
+        'Impunity',
+        'BOOM Esports',
+        'Beyond Gaming',
+        'PSG Talon'
     ]
     raw_data_2020 = '../data/raw_data/2020_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
     raw_data_2021 = '../data/raw_data/2021_LoL_esports_match_data_from_OraclesElixir_20210210.csv'
