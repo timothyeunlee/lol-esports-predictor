@@ -7,7 +7,7 @@ import pandas as pd
 # combine files from '2020_2021_team_stats_csv' into a single csv
 # use case to easily manipulate ceratin features for ml models  
 def unfiltered_features_csv_maker(): 
-    csvs_path = '../data/2020_2021_team_stats_csv'
+    csvs_path = '../data/2020_2021_raw_team_stats_csv'
     csvs = os.listdir(csvs_path)
     frames = [] 
     for csv in csvs: 
@@ -20,7 +20,7 @@ def unfiltered_features_csv_maker():
 # iterates through all csvs in directory 
 # drops columns, concats them together, exports 
 def clean_csv(): 
-    csvs_path = '../data/2020_2021_team_stats_csv'
+    csvs_path = '../data/2020_2021_raw_team_stats_csv'
     csvs = os.listdir(csvs_path)
     frames = [] # list of every data frame in the csv dir 
     for csv in csvs: 
@@ -39,8 +39,8 @@ def drop_columns(df):
 
 def export(df): 
     output_dir = '../data/teams_ml_data'
-    output_file = 'combined_team_stats_all_columns.csv'
-
+    output_file = 'combined_team_stats.csv'
+    
     if not os.path.exists(output_dir): 
         os.mkdir(output_dir) 
 
@@ -48,7 +48,8 @@ def export(df):
     df.to_csv(complete_path) 
 
 def main():
-    clean_csv() 
+    # clean_csv() 
+    unfiltered_features_csv_maker()
 
 if __name__ == "__main__": 
     main()
