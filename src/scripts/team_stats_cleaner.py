@@ -4,6 +4,18 @@ import pandas as pd
 """
     SCRIPT to do various cleaning tasks to team filtered data 
 """
+# combine files from '2020_2021_team_stats_csv' into a single csv
+# use case to easily manipulate ceratin features for ml models  
+def unfiltered_features_csv_maker(): 
+    csvs_path = '../data/2020_2021_team_stats_csv'
+    csvs = os.listdir(csvs_path)
+    frames = [] 
+    for csv in csvs: 
+        full_csv_path = csvs_path + '/' + csv
+        df = pd.read_csv(full_csv_path) 
+        frames.append(df) 
+    combined_df = pd.concat(frames) 
+    export(combined_df) 
 
 # iterates through all csvs in directory 
 # drops columns, concats them together, exports 
