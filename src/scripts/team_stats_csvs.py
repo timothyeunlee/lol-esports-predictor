@@ -139,7 +139,7 @@ def get_team_stats_helper(csv, team_list, region, year):
 
 def export_df(team_df, team, region, year):
     # output_dir = '../data/team_stats_csv'
-    output_dir = '../data/2020_2021_team_stats_csv'
+    output_dir = '../data/2020_2021_raw_team_stats_csv'
     year_dir = output_dir + '/' + year
     region_dir = year_dir + '/' + region 
     formatted_team = format_team(team)
