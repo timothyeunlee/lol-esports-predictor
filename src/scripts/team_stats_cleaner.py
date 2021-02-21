@@ -5,7 +5,6 @@ import pandas as pd
     SCRIPT to do various cleaning tasks to team filtered data 
 """
 
-
 # iterates through all csvs in directory 
 # drops columns, concats them together, exports 
 def clean_csv(): 
@@ -17,7 +16,6 @@ def clean_csv():
         df = pd.read_csv(full_csv_path) 
         dropped_df = drop_columns(df)
         frames.append(dropped_df)
-    
     combined_df = pd.concat(frames)
     export(combined_df)
 
@@ -29,7 +27,7 @@ def drop_columns(df):
 
 def export(df): 
     output_dir = '../data/teams_ml_data'
-    output_file = 'combined_team_stats.csv'
+    output_file = 'combined_team_stats_all_columns.csv'
 
     if not os.path.exists(output_dir): 
         os.mkdir(output_dir) 
