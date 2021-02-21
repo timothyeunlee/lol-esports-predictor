@@ -2,7 +2,7 @@ import os
 import pandas as pd 
 
 """
-    SCRIPT to drop unncessary columns from csvs for ml 
+    SCRIPT to do various cleaning tasks to team filtered data 
 """
 
 
