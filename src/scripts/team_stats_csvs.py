@@ -99,7 +99,7 @@ def filter_df(csv, teams):
     return new_df
 
 def export(df, year):
-    output_dir = '../data/2020_2021_team_stats_csv'
+    output_dir = '../data/2020_2021_raw_team_stats_csv'
     output_file = year + '_team_stats.csv'
     if not os.path.exists(output_dir): 
         os.mkdir(output_dir) 
